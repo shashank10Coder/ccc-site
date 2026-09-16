@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Access Restricted — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap" style="text-align:center; padding-top:80px; padding-bottom:100px;">
+  <div class="locked-icon" style="margin:0 auto 22px;">
+    <svg class="icon"><use href="#icon-lock"/></svg>
+  </div>
+  <div class="eyebrow">Error 403</div>
+  <h1 style="margin:14px 0;">Access Restricted</h1>
+  <p style="max-width:420px; margin:0 auto 26px;">You don't have access to this content. If this is a paid item, please purchase it first to unlock it.</p>
+  <a href="{{ url_for('home') }}" class="btn btn-gold">Return Home</a>
+</div>
+{% endblock %}

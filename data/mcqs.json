@@ -1,0 +1,50 @@
+[
+  {
+    "id": "mcq-set-001",
+    "title": "Indian Polity - Constitution Basics",
+    "category": "Polity",
+    "is_paid": false,
+    "price": 0,
+    "questions": [
+      {
+        "q": "The Constitution of India was adopted on which date?",
+        "options": ["15 August 1947", "26 January 1950", "26 November 1949", "2 October 1950"],
+        "answer": 2,
+        "explanation": "The Constitution was adopted by the Constituent Assembly on 26 November 1949 and came into effect on 26 January 1950."
+      },
+      {
+        "q": "Which Article of the Constitution abolishes untouchability?",
+        "options": ["Article 14", "Article 15", "Article 17", "Article 21"],
+        "answer": 2,
+        "explanation": "Article 17 abolishes untouchability and forbids its practice in any form."
+      },
+      {
+        "q": "The concept of Directive Principles of State Policy was borrowed from which country?",
+        "options": ["United Kingdom", "United States", "Ireland", "Canada"],
+        "answer": 2,
+        "explanation": "The Directive Principles of State Policy were borrowed from the Irish Constitution."
+      }
+    ]
+  },
+  {
+    "id": "mcq-set-002",
+    "title": "Quantitative Aptitude - Percentage and Profit Loss",
+    "category": "Quantitative Aptitude",
+    "is_paid": true,
+    "price": 19,
+    "questions": [
+      {
+        "q": "A shopkeeper marks an item 40% above cost price and gives a 10% discount. What is his profit percentage?",
+        "options": ["24%", "26%", "30%", "36%"],
+        "answer": 1,
+        "explanation": "Let CP = 100. Marked price = 140. After 10% discount, SP = 126. Profit = 26%."
+      },
+      {
+        "q": "If the price of an item is increased by 20% and then decreased by 20%, the net change is:",
+        "options": ["No change", "4% decrease", "4% increase", "20% decrease"],
+        "answer": 1,
+        "explanation": "Net change = -(20*20)/100 = -4%, a 4% decrease."
+      }
+    ]
+  }
+]

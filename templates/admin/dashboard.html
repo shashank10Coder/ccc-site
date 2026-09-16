@@ -1,0 +1,25 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Admin Dashboard — {{ site_name }}{% endblock %}
+{% block admin_content %}
+<div class="eyebrow">Overview</div>
+<h2 style="margin-bottom:26px;">Dashboard</h2>
+
+<div class="stat-row" style="grid-template-columns: repeat(auto-fit, minmax(150px,1fr));">
+  <div class="stat-box"><div class="num">{{ stats.users }}</div><div class="label">Students</div></div>
+  <div class="stat-box"><div class="num">{{ stats.pdfs }}</div><div class="label">PDFs</div></div>
+  <div class="stat-box"><div class="num">{{ stats.blogs }}</div><div class="label">Blog Posts</div></div>
+  <div class="stat-box"><div class="num">{{ stats.mcq_sets }}</div><div class="label">MCQ Sets</div></div>
+  <div class="stat-box"><div class="num">{{ stats.questions }}</div><div class="label">Questions</div></div>
+  <div class="stat-box"><div class="num">{{ stats.purchases }}</div><div class="label">Purchases</div></div>
+</div>
+
+<div class="admin-card">
+  <h4 style="margin-bottom:12px;">Quick Start</h4>
+  <p style="font-size:0.9rem; margin-bottom:14px;">Use the menu on the left to upload new PDFs, publish blog posts, or build new MCQ test sets. Everything you add here appears on the live site immediately — no code editing needed.</p>
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
+    <a href="{{ url_for('admin_pdfs') }}" class="btn btn-outline btn-sm"><svg class="icon icon-sm"><use href="#icon-upload"/></svg>Upload a PDF</a>
+    <a href="{{ url_for('admin_blogs') }}" class="btn btn-outline btn-sm"><svg class="icon icon-sm"><use href="#icon-edit"/></svg>Write a Blog Post</a>
+    <a href="{{ url_for('admin_mcqs') }}" class="btn btn-outline btn-sm"><svg class="icon icon-sm"><use href="#icon-quiz"/></svg>Create an MCQ Set</a>
+  </div>
+</div>
+{% endblock %}

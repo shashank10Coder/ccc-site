@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ mcq_set.title }} — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap" style="max-width:720px;">
+  <a href="{{ url_for('mcqs_page') }}" class="eyebrow" style="display:inline-block; margin-bottom:18px;">&larr; Back to MCQ sets</a>
+  <h2 style="margin-bottom:22px;">{{ mcq_set.title }}</h2>
+
+  <div id="mcq-quiz-wrap">
+    <div class="mcq-progress"><div class="mcq-progress-bar" id="mcq-progress-bar"></div></div>
+    <div class="eyebrow" id="mcq-progress-label" style="margin-bottom:16px;"></div>
+
+    <div class="mcq-question-card protected-content" id="mcq-question-card"></div>
+
+    <div class="mcq-nav">
+      <button class="btn btn-ghost" id="mcq-prev-btn">Previous</button>
+      <button class="btn btn-gold" id="mcq-next-btn">Next</button>
+    </div>
+  </div>
+
+  <div class="mcq-result-panel" id="mcq-result-panel" style="display:none;"></div>
+</div>
+
+<script type="application/json" id="mcq-data">{{ mcq_set | tojson }}</script>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/mcq.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Manage MCQs — {{ site_name }}{% endblock %}
+{% block admin_content %}
+<div class="eyebrow">Content Management</div>
+<h2 style="margin-bottom:26px;">MCQ Sets</h2>
+
+<div class="admin-card">
+  <h4 style="margin-bottom:8px;">Create a New MCQ Set</h4>
+  <p class="form-hint" style="margin-bottom:18px;">Add each question one at a time. For options, separate them with commas — the "Correct option number" starts counting from 0 (0 = first option, 1 = second option, and so on).</p>
+
+  <form method="POST" action="{{ url_for('admin_mcqs') }}">
+    <div class="form-grid" style="margin-bottom:20px;">
+      <div class="form-group">
+        <label>Set Title</label>
+        <input type="text" name="title" required>
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" name="category" placeholder="e.g. Polity, Quantitative Aptitude" required>
+      </div>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" name="is_paid" class="is-paid-toggle" data-price-target="#mcq-price-group" style="width:auto;">
+          This is a paid set
+        </label>
+      </div>
+      <div class="form-group" id="mcq-price-group" style="display:none;">
+        <label>Price (in &#8377;)</label>
+        <input type="number" name="price" min="0" value="0">
+      </div>
+    </div>
+
+    <h4 style="margin-bottom:14px;">Questions</h4>
+    <div id="questions-container">
+      <div class="mcq-builder-row">
+        <div class="form-group">
+          <label>Question text</label>
+          <input type="text" name="question_text[]" required>
+        </div>
+        <div class="form-group">
+          <label>Options (comma separated, e.g. Delhi, Mumbai, Chennai, Kolkata)</label>
+          <input type="text" name="question_options[]" required>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Correct option number (0 = first option, 1 = second...)</label>
+            <input type="number" name="question_answer[]" min="0" value="0" required>
+          </div>
+          <div class="form-group">
+            <label>Explanation (optional)</label>
+            <input type="text" name="question_explanation[]">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button type="button" class="btn btn-outline btn-sm" id="add-question-btn" style="margin-bottom:22px;">+ Add Another Question</button>
+    <br>
+    <button type="submit" class="btn btn-gold">
+      <svg class="icon icon-sm"><use href="#icon-upload"/></svg> Create MCQ Set
+    </button>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th>Title</th><th>Category</th><th>Access</th><th>Questions</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for set in mcq_sets %}
+      <tr>
+        <td>{{ set.title }}</td>
+        <td>{{ set.category }}</td>
+        <td>{% if set.is_paid %}&#8377;{{ set.price }}{% else %}Free{% endif %}</td>
+        <td>{{ set.questions|length }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('admin_delete_mcq', set_id=set.id) }}" onsubmit="return confirm('Delete this MCQ set permanently?');">
+            <button type="submit" class="btn btn-ghost btn-sm"><svg class="icon icon-sm"><use href="#icon-trash"/></svg></button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">No MCQ sets created yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

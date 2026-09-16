@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Help & Support — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap" style="max-width:820px;">
+  <div class="eyebrow">Support</div>
+  <h2 style="margin-bottom:14px;">Help Centre</h2>
+  <p>Have a question about your account, a purchase, or something on the site not working as expected? We're here to help.</p>
+
+  <div class="help-grid">
+    <div class="help-card">
+      <svg class="icon icon-lg"><use href="#icon-user"/></svg>
+      <h4 style="margin-bottom:10px;">Account &amp; Login</h4>
+      <p style="font-size:0.9rem;">Trouble signing up, receiving your OTP code, or logging in? Check your spam folder for the verification email first, then contact us if it still doesn't arrive.</p>
+    </div>
+    <div class="help-card">
+      <svg class="icon icon-lg"><use href="#icon-rupee"/></svg>
+      <h4 style="margin-bottom:10px;">Payments &amp; Purchases</h4>
+      <p style="font-size:0.9rem;">If a payment was deducted but you didn't get access to the PDF or blog, email us with your registered email address and we'll resolve it promptly.</p>
+    </div>
+    <div class="help-card">
+      <svg class="icon icon-lg"><use href="#icon-pdf"/></svg>
+      <h4 style="margin-bottom:10px;">PDF Access Issues</h4>
+      <p style="font-size:0.9rem;">PDFs open in a protected in-site viewer and cannot be downloaded directly, to keep pricing fair for all students. If a PDF won't load, let us know which one.</p>
+    </div>
+    <div class="help-card">
+      <svg class="icon icon-lg"><use href="#icon-quiz"/></svg>
+      <h4 style="margin-bottom:10px;">MCQs &amp; Content Errors</h4>
+      <p style="font-size:0.9rem;">Spotted an incorrect answer or a typo in one of our MCQ sets or blog posts? Reporting it helps every future student — please write in.</p>
+    </div>
+  </div>
+
+  <div class="contact-box">
+    <svg class="icon"><use href="#icon-mail"/></svg>
+    <div>
+      <div style="font-family:var(--font-ui); font-size:0.82rem; color:var(--ivory-dim);">Write to us anytime at</div>
+      <a href="mailto:{{ support_email }}">{{ support_email }}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

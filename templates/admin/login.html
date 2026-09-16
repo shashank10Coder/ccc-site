@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Admin Login — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-panel">
+    <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="CCC Crest" class="crest-mini">
+    <h2>Admin Panel</h2>
+    <p class="sub">Manage your site's PDFs, blogs, MCQs and students.</p>
+
+    <form method="POST" action="{{ url_for('admin_login') }}">
+      <div class="form-group">
+        <label>Admin Username</label>
+        <input type="text" name="username" required>
+      </div>
+      <div class="form-group">
+        <label>Admin Password</label>
+        <input type="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-gold btn-block">Log In to Admin</button>
+    </form>
+    <div class="form-hint" style="text-align:center; margin-top:18px;">Your admin username &amp; password are set in your .env file.</div>
+  </div>
+</div>
+{% endblock %}

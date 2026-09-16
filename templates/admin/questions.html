@@ -1,0 +1,27 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Q&A — {{ site_name }}{% endblock %}
+{% block admin_content %}
+<div class="eyebrow">Community</div>
+<h2 style="margin-bottom:26px;">Student Questions</h2>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th>Title</th><th>Asked By</th><th>Category</th><th>Date</th><th>Answers</th></tr>
+    </thead>
+    <tbody>
+      {% for q in questions %}
+      <tr>
+        <td><a href="{{ url_for('question_detail', question_id=q.id) }}" target="_blank" style="color:var(--gold-300);">{{ q.title }}</a></td>
+        <td>{{ q.asked_by }}</td>
+        <td>{{ q.category }}</td>
+        <td>{{ q.date }}</td>
+        <td>{{ q.answers|length }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">No questions posted yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

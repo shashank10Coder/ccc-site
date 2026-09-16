@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="admin-shell">
+  <aside class="admin-sidebar">
+    <div class="eyebrow" style="padding:0 12px; margin-bottom:16px;">Admin Panel</div>
+    <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin_dashboard' }}"><svg class="icon icon-sm"><use href="#icon-home"/></svg>Dashboard</a>
+    <a href="{{ url_for('admin_pdfs') }}" class="{{ 'active' if request.endpoint == 'admin_pdfs' }}"><svg class="icon icon-sm"><use href="#icon-pdf"/></svg>PDFs</a>
+    <a href="{{ url_for('admin_blogs') }}" class="{{ 'active' if request.endpoint == 'admin_blogs' }}"><svg class="icon icon-sm"><use href="#icon-book"/></svg>Blog Posts</a>
+    <a href="{{ url_for('admin_mcqs') }}" class="{{ 'active' if request.endpoint == 'admin_mcqs' }}"><svg class="icon icon-sm"><use href="#icon-quiz"/></svg>MCQ Sets</a>
+    <a href="{{ url_for('admin_questions') }}" class="{{ 'active' if request.endpoint == 'admin_questions' }}"><svg class="icon icon-sm"><use href="#icon-answer"/></svg>Q&amp;A</a>
+    <a href="{{ url_for('admin_users') }}" class="{{ 'active' if request.endpoint == 'admin_users' }}"><svg class="icon icon-sm"><use href="#icon-user"/></svg>Students</a>
+    <a href="{{ url_for('home') }}"><svg class="icon icon-sm"><use href="#icon-eye"/></svg>View Site</a>
+    <a href="{{ url_for('admin_logout') }}"><svg class="icon icon-sm"><use href="#icon-logout"/></svg>Log Out</a>
+  </aside>
+  <main class="admin-main">
+    {% block admin_content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    {% if logged_in_user %}
+    <div class="sidebar-profile">
+      <img src="{{ logged_in_user.profile_pic }}" alt="Profile picture">
+      <div>
+        <div class="name">{{ logged_in_user.name }}</div>
+        <div class="email">{{ logged_in_user.email }}</div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-title">Menu</div>
+      <ul class="sidebar-nav">
+        <li><a href="{{ url_for('home') }}"><svg class="icon icon-sm"><use href="#icon-home"/></svg>Home</a></li>
+        <li><a href="{{ url_for('profile_page') }}" class="{{ 'active' if request.endpoint == 'profile_page' }}"><svg class="icon icon-sm"><use href="#icon-user"/></svg>My Profile</a></li>
+        <li><a href="{{ url_for('mcqs_page') }}"><svg class="icon icon-sm"><use href="#icon-quiz"/></svg>MCQ Practice</a></li>
+        <li><a href="{{ url_for('blog_page') }}"><svg class="icon icon-sm"><use href="#icon-book"/></svg>Blog</a></li>
+        <li><a href="{{ url_for('pdfs_page') }}"><svg class="icon icon-sm"><use href="#icon-pdf"/></svg>PDF Library</a></li>
+        <li><a href="{{ url_for('questions_page') }}"><svg class="icon icon-sm"><use href="#icon-answer"/></svg>Question &amp; Answers</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-nav-group">
+      <div class="sidebar-nav-title">Account</div>
+      <ul class="sidebar-nav">
+        <li><a href="{{ url_for('help_page') }}"><svg class="icon icon-sm"><use href="#icon-mail"/></svg>Help &amp; Support</a></li>
+        <li><a href="{{ url_for('logout') }}"><svg class="icon icon-sm"><use href="#icon-logout"/></svg>Log Out</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    {% block sidebar_content %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

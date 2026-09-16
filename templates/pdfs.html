@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}PDF Library — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Exam-Set Library</div>
+      <h2>PDF Library</h2>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <a href="{{ url_for('pdfs_page') }}" class="filter-chip {{ 'active' if not active_category and not active_type }}">All</a>
+    <a href="{{ url_for('pdfs_page', type='MCQ PDF') }}" class="filter-chip {{ 'active' if active_type == 'MCQ PDF' }}">MCQ PDFs</a>
+    <a href="{{ url_for('pdfs_page', type='Important Questions') }}" class="filter-chip {{ 'active' if active_type == 'Important Questions' }}">Important Questions</a>
+    {% for cat in categories %}
+      <a href="{{ url_for('pdfs_page', category=cat) }}" class="filter-chip {{ 'active' if active_category == cat }}">{{ cat }}</a>
+    {% endfor %}
+  </div>
+
+  {% if pdfs %}
+  <div class="card-grid">
+    {% for pdf in pdfs %}
+    <a href="{{ url_for('pdf_detail', pdf_id=pdf.id) }}" class="card">
+      <div class="card-media">
+        <img src="{{ pdf.cover_image }}" alt="{{ pdf.title }}">
+        <span class="badge {{ 'badge-paid' if pdf.is_paid else 'badge-free' }}">
+          {% if pdf.is_paid %}<svg class="icon icon-sm"><use href="#icon-lock"/></svg> Paid{% else %}<svg class="icon icon-sm"><use href="#icon-unlock"/></svg> Free{% endif %}
+        </span>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">{{ pdf.category }} &middot; {{ pdf.type }}</div>
+        <h3>{{ pdf.title }}</h3>
+        <p>{{ pdf.description }}</p>
+        <div class="card-meta">
+          <span>{{ pdf.upload_date }}</span>
+          {% if pdf.is_paid %}<span class="price-tag">&#8377;{{ pdf.price }}</span>{% else %}<span class="price-tag">Free</span>{% endif %}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No PDFs available in this filter yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

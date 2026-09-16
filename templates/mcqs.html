@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}MCQ Practice — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Practice Zone</div>
+      <h2>MCQ Test Sets</h2>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <a href="{{ url_for('mcqs_page') }}" class="filter-chip {{ 'active' if not active_category }}">All</a>
+    {% for cat in categories %}
+      <a href="{{ url_for('mcqs_page', category=cat) }}" class="filter-chip {{ 'active' if active_category == cat }}">{{ cat }}</a>
+    {% endfor %}
+  </div>
+
+  {% if mcq_sets %}
+  <div class="card-grid">
+    {% for set in mcq_sets %}
+    <a href="{{ url_for('mcq_attempt', set_id=set.id) }}" class="card">
+      <div class="card-body">
+        <span class="badge {{ 'badge-paid' if set.is_paid else 'badge-free' }}" style="position:static; display:inline-flex; margin-bottom:14px;">
+          {% if set.is_paid %}<svg class="icon icon-sm"><use href="#icon-lock"/></svg> Paid{% else %}<svg class="icon icon-sm"><use href="#icon-unlock"/></svg> Free{% endif %}
+        </span>
+        <div class="card-cat">{{ set.category }}</div>
+        <h3>{{ set.title }}</h3>
+        <p>{{ set.questions|length }} questions in this set.</p>
+        <div class="card-meta">
+          <span>Test your knowledge</span>
+          {% if set.is_paid %}<span class="price-tag">&#8377;{{ set.price }}</span>{% else %}<span class="price-tag">Free</span>{% endif %}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No MCQ sets available yet. Please check back soon.</p>
+  {% endif %}
+</div>
+{% endblock %}

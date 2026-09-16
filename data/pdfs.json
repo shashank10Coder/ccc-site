@@ -1,0 +1,41 @@
+[
+  {
+    "id": "pdf-001",
+    "title": "SSC CGL Tier 1 - Full Mock Set (2026)",
+    "description": "A complete mock question set covering Quant, Reasoning, English and General Awareness, modelled on the latest SSC CGL pattern.",
+    "category": "SSC CGL",
+    "type": "MCQ PDF",
+    "is_paid": true,
+    "price": 49,
+    "cover_image": "/static/img/placeholders/pdf-cover-1.svg",
+    "file_name": "ssc-cgl-tier1-mock-set.pdf",
+    "upload_date": "2026-08-20",
+    "downloads": 0
+  },
+  {
+    "id": "pdf-002",
+    "title": "Static GK Capsule - Free Edition",
+    "description": "Important static general knowledge facts every aspirant should revise weekly. Free for all registered students.",
+    "category": "General Knowledge",
+    "type": "Important Questions",
+    "is_paid": false,
+    "price": 0,
+    "cover_image": "/static/img/placeholders/pdf-cover-2.svg",
+    "file_name": "static-gk-capsule-free.pdf",
+    "upload_date": "2026-09-01",
+    "downloads": 0
+  },
+  {
+    "id": "pdf-003",
+    "title": "Railway NTPC - Important Questions Bank",
+    "description": "Curated high-probability questions for Railway NTPC CBT 1, based on the last five years of paper analysis.",
+    "category": "Railway NTPC",
+    "type": "Important Questions",
+    "is_paid": true,
+    "price": 39,
+    "cover_image": "/static/img/placeholders/pdf-cover-3.svg",
+    "file_name": "railway-ntpc-important-questions.pdf",
+    "upload_date": "2026-09-05",
+    "downloads": 0
+  }
+]

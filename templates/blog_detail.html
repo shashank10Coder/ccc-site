@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ post.title }} — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <a href="{{ url_for('blog_page') }}" class="eyebrow" style="display:inline-block; margin-bottom:22px;">&larr; Back to Blog</a>
+
+  <div class="article-header">
+    <div class="eyebrow">{{ post.category }}</div>
+    <h1>{{ post.title }}</h1>
+    <div class="article-meta">
+      <span><svg class="icon icon-sm"><use href="#icon-user"/></svg>{{ post.author }}</span>
+      <span><svg class="icon icon-sm"><use href="#icon-calendar"/></svg>{{ post.publish_date }}</span>
+      <span><svg class="icon icon-sm"><use href="#icon-eye"/></svg>{{ post.views }} views</span>
+    </div>
+  </div>
+
+  <div class="article-cover">
+    <img src="{{ post.cover_image }}" alt="{{ post.title }}">
+  </div>
+
+  <div class="prose protected-content" style="margin: 0 auto;">
+    {% for paragraph in post.content.split('\n\n') %}
+      <p>{{ paragraph }}</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

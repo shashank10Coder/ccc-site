@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}Chanakya Competition Cracker — MCQs, Blogs & Exam PDFs{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="CCC Crest" class="hero-crest">
+  <div class="eyebrow">Chanakya Competition Cracker</div>
+  <h1>Prepare with Strategy. Compete with Discipline.</h1>
+  <p class="lead">Practice MCQs, read expert strategy blogs, get your doubts answered, and download curated exam-set PDFs — all in one place built for serious aspirants.</p>
+  <div class="hero-actions">
+    {% if not logged_in_user %}
+      <a href="{{ url_for('signup_page') }}" class="btn btn-gold">Start Free Today</a>
+      <a href="{{ url_for('pdfs_page') }}" class="btn btn-outline">Browse PDF Library</a>
+    {% else %}
+      <a href="{{ url_for('mcqs_page') }}" class="btn btn-gold">Practice MCQs</a>
+      <a href="{{ url_for('pdfs_page') }}" class="btn btn-outline">Browse PDF Library</a>
+    {% endif %}
+  </div>
+  <div class="hero-divider"></div>
+  <div class="eyebrow">MCQ Practice &nbsp;&middot;&nbsp; Strategy Blog &nbsp;&middot;&nbsp; Doubt Forum &nbsp;&middot;&nbsp; Exam-Set PDFs</div>
+</section>
+
+<div class="page-wrap">
+
+  <section style="margin-bottom:60px;">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Latest Additions</div>
+        <h2>Fresh from the Desk</h2>
+      </div>
+      <a href="{{ url_for('pdfs_page') }}" class="see-all">View all PDFs <svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></a>
+    </div>
+    <div class="card-grid">
+      {% for pdf in latest_pdfs %}
+      <a href="{{ url_for('pdf_detail', pdf_id=pdf.id) }}" class="card">
+        <div class="card-media">
+          <img src="{{ pdf.cover_image }}" alt="{{ pdf.title }}">
+          <span class="badge {{ 'badge-paid' if pdf.is_paid else 'badge-free' }}">
+            {% if pdf.is_paid %}<svg class="icon icon-sm"><use href="#icon-lock"/></svg> Paid{% else %}<svg class="icon icon-sm"><use href="#icon-unlock"/></svg> Free{% endif %}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="card-cat">{{ pdf.category }} &middot; {{ pdf.type }}</div>
+          <h3>{{ pdf.title }}</h3>
+          <p>{{ pdf.description }}</p>
+          <div class="card-meta">
+            <span>{{ pdf.upload_date }}</span>
+            {% if pdf.is_paid %}<span class="price-tag">&#8377;{{ pdf.price }}</span>{% else %}<span class="price-tag">Free</span>{% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">From the Blog</div>
+        <h2>Vacancy Updates &amp; Strategy</h2>
+      </div>
+      <a href="{{ url_for('blog_page') }}" class="see-all">View all posts <svg class="icon icon-sm"><use href="#icon-arrow-right"/></svg></a>
+    </div>
+    <div class="card-grid">
+      {% for post in latest_blogs %}
+      <a href="{{ url_for('blog_detail', blog_id=post.id) }}" class="card">
+        <div class="card-media">
+          <img src="{{ post.cover_image }}" alt="{{ post.title }}">
+          <span class="badge {{ 'badge-paid' if post.is_paid else 'badge-free' }}">
+            {% if post.is_paid %}<svg class="icon icon-sm"><use href="#icon-lock"/></svg> Paid{% else %}<svg class="icon icon-sm"><use href="#icon-unlock"/></svg> Free{% endif %}
+          </span>
+        </div>
+        <div class="card-body">
+          <div class="card-cat">{{ post.category }}</div>
+          <h3>{{ post.title }}</h3>
+          <p>{{ post.summary }}</p>
+          <div class="card-meta">
+            <span>{{ post.publish_date }}</span>
+            {% if post.is_paid %}<span class="price-tag">&#8377;{{ post.price }}</span>{% else %}<span class="price-tag">Free</span>{% endif %}
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

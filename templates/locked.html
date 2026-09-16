@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Premium Content — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <div class="locked-wrap">
+    <div class="locked-icon">
+      <svg class="icon"><use href="#icon-lock"/></svg>
+    </div>
+    <div class="eyebrow">Premium {{ item_kind }}</div>
+    <h2 style="margin:10px 0;">{{ item.title }}</h2>
+    <p>This {{ item_kind }} is part of our premium collection. Unlock it to get full access, along with everything else you purchase saved to your profile.</p>
+    <div class="price-display">&#8377;{{ item.price }}</div>
+
+    {% if logged_in_user %}
+      <form method="POST" action="{{ url_for('buy_item', item_type='content', item_id=item.id) }}">
+        <button type="submit" class="btn btn-gold btn-block">
+          <svg class="icon icon-sm"><use href="#icon-unlock"/></svg> Unlock Now
+        </button>
+      </form>
+    {% else %}
+      <a href="{{ url_for('login_page') }}" class="btn btn-gold btn-block">Log In to Unlock</a>
+    {% endif %}
+
+    <a href="{{ back_url }}" class="btn btn-ghost btn-block" style="margin-top:12px;">Go Back</a>
+  </div>
+</div>
+{% endblock %}

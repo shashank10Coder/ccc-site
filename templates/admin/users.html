@@ -1,0 +1,26 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Students — {{ site_name }}{% endblock %}
+{% block admin_content %}
+<div class="eyebrow">Community</div>
+<h2 style="margin-bottom:26px;">Registered Students</h2>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th>Name</th><th>Email</th><th>Joined</th><th>Bio</th></tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.name }}</td>
+        <td>{{ u.email }}</td>
+        <td>{{ u.joined }}</td>
+        <td>{{ u.bio or '—' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4">No students registered yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

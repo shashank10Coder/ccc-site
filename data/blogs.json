@@ -1,0 +1,28 @@
+[
+  {
+    "id": "blog-001",
+    "title": "UPSC Prelims 2027 Notification Expected Soon: What Aspirants Should Prepare Now",
+    "summary": "An early look at the expected timeline and how to structure your next three months before the official notification drops.",
+    "content": "The Union Public Service Commission typically releases its Civil Services notification in the second week of February. While the official date is awaited, aspirants should use this window to complete their first reading of NCERT foundations and begin daily newspaper analysis.\n\nFocus areas for this period should include static portions of History, Geography and Polity, since these do not change year to year and can be completed well in advance of the notification. Current affairs revision is best started only two to three months before the exam, so early preparation time is better spent on the static syllabus.\n\nAspirants are also advised to begin answer writing practice at least once a week from now, even before the notification is out, since this skill takes the longest to develop.",
+    "category": "Vacancy Update",
+    "is_paid": false,
+    "price": 0,
+    "cover_image": "/static/img/placeholders/blog-cover-1.svg",
+    "author": "CCC Editorial Desk",
+    "publish_date": "2026-09-10",
+    "views": 3
+  },
+  {
+    "id": "blog-002",
+    "title": "Complete Strategy Guide: Cracking SSC CGL in 6 Months",
+    "summary": "A month-by-month breakdown of how to structure your preparation for SSC CGL from a standing start.",
+    "content": "This detailed strategy guide breaks down a six month plan into clear phases: foundation building for the first two months, speed and accuracy training for the next two, and full mock test immersion for the final two months before the exam.\n\nThis is a premium guide with detailed subject-wise time allocation, recommended book lists, and a printable weekly tracker template included at the end.",
+    "category": "Strategy",
+    "is_paid": true,
+    "price": 29,
+    "cover_image": "/static/img/placeholders/blog-cover-2.svg",
+    "author": "CCC Editorial Desk",
+    "publish_date": "2026-09-08",
+    "views": 0
+  }
+]

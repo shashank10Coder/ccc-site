@@ -1,0 +1,77 @@
+{% extends "base_sidebar.html" %}
+{% block title %}My Profile — {{ site_name }}{% endblock %}
+{% block sidebar_content %}
+
+<div class="profile-header">
+  <img src="{{ user.profile_pic }}" alt="Profile picture" id="profile-pic-preview">
+  <div>
+    <h2>{{ user.name }}</h2>
+    <p>{{ user.email }}</p>
+    <p style="font-size:0.82rem;">Member since {{ user.joined }}</p>
+  </div>
+</div>
+
+<div class="stat-row">
+  <div class="stat-box"><div class="num">{{ purchased_pdfs|length }}</div><div class="label">PDFs Owned</div></div>
+  <div class="stat-box"><div class="num">{{ purchased_blogs|length }}</div><div class="label">Blogs Unlocked</div></div>
+  <div class="stat-box"><div class="num">{{ purchased_mcqs|length }}</div><div class="label">MCQ Sets Owned</div></div>
+</div>
+
+<div class="admin-card">
+  <h4 style="margin-bottom:18px;">Edit Profile</h4>
+  <form method="POST" action="{{ url_for('update_profile') }}" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" value="{{ user.name }}">
+      </div>
+      <div class="form-group">
+        <label>Profile Picture</label>
+        <input type="file" name="profile_pic" id="profile-pic-input" accept="image/*">
+      </div>
+      <div class="form-group full">
+        <label>Bio</label>
+        <textarea name="bio" rows="3" placeholder="Tell us a little about your preparation journey...">{{ user.bio }}</textarea>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-gold">
+      <svg class="icon icon-sm"><use href="#icon-edit"/></svg> Save Changes
+    </button>
+  </form>
+</div>
+
+<h3 style="margin: 34px 0 18px;">My Purchased PDFs</h3>
+{% if purchased_pdfs %}
+<div class="card-grid">
+  {% for pdf in purchased_pdfs %}
+  <a href="{{ url_for('pdf_detail', pdf_id=pdf.id) }}" class="card">
+    <div class="card-media"><img src="{{ pdf.cover_image }}" alt="{{ pdf.title }}"></div>
+    <div class="card-body">
+      <div class="card-cat">{{ pdf.category }}</div>
+      <h3>{{ pdf.title }}</h3>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p>You haven't purchased any PDFs yet. <a href="{{ url_for('pdfs_page') }}" style="color:var(--gold-300);">Browse the library</a>.</p>
+{% endif %}
+
+<h3 style="margin: 34px 0 18px;">My Unlocked Blog Articles</h3>
+{% if purchased_blogs %}
+<div class="card-grid">
+  {% for post in purchased_blogs %}
+  <a href="{{ url_for('blog_detail', blog_id=post.id) }}" class="card">
+    <div class="card-media"><img src="{{ post.cover_image }}" alt="{{ post.title }}"></div>
+    <div class="card-body">
+      <div class="card-cat">{{ post.category }}</div>
+      <h3>{{ post.title }}</h3>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<p>No paid blog articles unlocked yet.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Manage PDFs — {{ site_name }}{% endblock %}
+{% block admin_content %}
+<div class="eyebrow">Content Management</div>
+<h2 style="margin-bottom:26px;">PDFs</h2>
+
+<div class="admin-card">
+  <h4 style="margin-bottom:18px;">Upload a New PDF</h4>
+  <form method="POST" action="{{ url_for('admin_pdfs') }}" enctype="multipart/form-data">
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" name="title" required>
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <input type="text" name="category" placeholder="e.g. SSC CGL, UPSC, Railway NTPC" required>
+      </div>
+      <div class="form-group full">
+        <label>Description</label>
+        <textarea name="description" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Type</label>
+        <select name="type">
+          <option value="MCQ PDF">MCQ PDF</option>
+          <option value="Important Questions">Important Questions</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" name="is_paid" class="is-paid-toggle" data-price-target="#pdf-price-group" style="width:auto;">
+          This is a paid PDF
+        </label>
+      </div>
+      <div class="form-group" id="pdf-price-group" style="display:none;">
+        <label>Price (in &#8377;)</label>
+        <input type="number" name="price" min="0" value="0">
+      </div>
+      <div class="form-group">
+        <label>PDF File</label>
+        <input type="file" name="pdf_file" accept="application/pdf" required>
+      </div>
+      <div class="form-group">
+        <label>Cover Image (optional)</label>
+        <input type="file" name="cover_image" accept="image/*">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-gold">
+      <svg class="icon icon-sm"><use href="#icon-upload"/></svg> Upload PDF
+    </button>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table class="data-table">
+    <thead>
+      <tr><th>Title</th><th>Category</th><th>Type</th><th>Access</th><th>Uploaded</th><th>Downloads</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for pdf in pdfs %}
+      <tr>
+        <td>{{ pdf.title }}</td>
+        <td>{{ pdf.category }}</td>
+        <td>{{ pdf.type }}</td>
+        <td>{% if pdf.is_paid %}&#8377;{{ pdf.price }}{% else %}Free{% endif %}</td>
+        <td>{{ pdf.upload_date }}</td>
+        <td>{{ pdf.downloads }}</td>
+        <td>
+          <form method="POST" action="{{ url_for('admin_delete_pdf', pdf_id=pdf.id) }}" onsubmit="return confirm('Delete this PDF permanently?');">
+            <button type="submit" class="btn btn-ghost btn-sm"><svg class="icon icon-sm"><use href="#icon-trash"/></svg></button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7">No PDFs uploaded yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

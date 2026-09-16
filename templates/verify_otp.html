@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Verify Your Email — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-panel">
+    <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="CCC Crest" class="crest-mini">
+    <h2>Verify Your Email</h2>
+    <p class="sub">We've sent a 6-digit code to<br><strong style="color:var(--gold-200);">{{ email }}</strong></p>
+
+    <form method="POST" action="{{ url_for('verify_otp_page') }}">
+      <div class="otp-input-row">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
+        <input type="text" maxlength="1" inputmode="numeric">
+      </div>
+      <input type="hidden" name="otp" id="otp-combined">
+      <button type="submit" class="btn btn-gold btn-block">Verify &amp; Continue</button>
+    </form>
+
+    <div class="auth-switch">
+      <button type="button" id="resend-otp-btn" class="btn btn-ghost btn-sm" style="margin-top:6px;">Resend code</button>
+      <div id="otp-resend-status" class="form-hint" style="margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

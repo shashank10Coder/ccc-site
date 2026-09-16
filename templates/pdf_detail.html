@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}{{ pdf.title }} — {{ site_name }}{% endblock %}
+{% block content %}
+<div class="page-wrap">
+  <a href="{{ url_for('pdfs_page') }}" class="eyebrow" style="display:inline-block; margin-bottom:22px;">&larr; Back to PDF Library</a>
+
+  <div style="display:flex; gap:30px; flex-wrap:wrap; margin-bottom:34px;">
+    <img src="{{ pdf.cover_image }}" alt="{{ pdf.title }}" style="width:220px; border-radius:12px; border:1px solid rgba(201,162,39,0.3);">
+    <div style="flex:1; min-width:260px;">
+      <div class="eyebrow">{{ pdf.category }} &middot; {{ pdf.type }}</div>
+      <h1 style="margin:8px 0 14px;">{{ pdf.title }}</h1>
+      <p style="margin-bottom:18px;">{{ pdf.description }}</p>
+      <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+        {% if pdf.is_paid %}
+          <span class="price-tag" style="font-size:1.3rem;">&#8377;{{ pdf.price }}</span>
+        {% else %}
+          <span class="price-tag" style="font-size:1.3rem;">Free</span>
+        {% endif %}
+
+        {% if owns_it %}
+          <a href="{{ url_for('secure_pdf_view', pdf_id=pdf.id) }}" target="_blank" class="btn btn-gold">
+            <svg class="icon icon-sm"><use href="#icon-eye"/></svg> View PDF
+          </a>
+        {% elif logged_in_user %}
+          <form method="POST" action="{{ url_for('buy_item', item_type='pdf', item_id=pdf.id) }}">
+            <button type="submit" class="btn btn-gold">
+              <svg class="icon icon-sm"><use href="#icon-lock"/></svg> Unlock for &#8377;{{ pdf.price }}
+            </button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('login_page') }}" class="btn btn-gold">Log In to Access</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if owns_it %}
+  <div class="admin-card">
+    <h4 style="margin-bottom:14px;">Preview</h4>
+    <div class="pdf-viewer-frame protected-content" style="border-radius:10px; overflow:hidden; border:1px solid rgba(201,162,39,0.25); height:600px;">
+      <iframe src="{{ url_for('secure_pdf_view', pdf_id=pdf.id) }}" style="width:100%; height:100%; border:none;"></iframe>
+    </div>
+    <p class="form-hint" style="margin-top:12px;">This document is for your personal study use only. Right-click and text selection are disabled on this page.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
