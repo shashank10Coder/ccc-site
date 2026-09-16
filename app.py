@@ -50,7 +50,10 @@ from flask import (
 )
 
 from werkzeug.utils import secure_filename
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import (
+    generate_password_hash,
+    check_password_hash,
+)
 
 try:
     from dotenv import load_dotenv
@@ -69,16 +72,44 @@ load_dotenv()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 DATA_DIR = os.path.join(BASE_DIR, "data")
-UPLOAD_PDF_DIR = os.path.join(BASE_DIR, "static", "uploads", "pdfs")
-UPLOAD_BLOG_IMG_DIR = os.path.join(BASE_DIR, "static", "uploads", "blog_images")
-UPLOAD_PROFILE_DIR = os.path.join(BASE_DIR, "static", "uploads", "profile_pics")
+
+UPLOAD_PDF_DIR = os.path.join(
+    BASE_DIR,
+    "static",
+    "uploads",
+    "pdfs"
+)
+
+UPLOAD_BLOG_IMG_DIR = os.path.join(
+    BASE_DIR,
+    "static",
+    "uploads",
+    "blog_images"
+)
+
+UPLOAD_PROFILE_DIR = os.path.join(
+    BASE_DIR,
+    "static",
+    "uploads",
+    "profile_pics"
+)
 
 app = Flask(__name__)
 
-app.secret_key = os.getenv("SECRET_KEY", "dev-key-change-me")
+app.secret_key = os.getenv(
+    "SECRET_KEY",
+    "dev-key-change-me"
+)
 
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin")
+ADMIN_USERNAME = os.getenv(
+    "ADMIN_USERNAME",
+    "admin"
+)
+
+ADMIN_PASSWORD = os.getenv(
+    "ADMIN_PASSWORD",
+    "admin"
+)
 
 SUPPORT_EMAIL = os.getenv(
     "SUPPORT_EMAIL",
@@ -93,13 +124,19 @@ DEBUG_MODE = (
     os.getenv("DEBUG_MODE", "true").lower() == "true"
 )
 
-PORT = int(os.getenv("PORT", "5000"))
+PORT = int(
+    os.getenv("PORT", "5000")
+)
+
 
 # --------------------------------------------------------------
 # RESEND EMAIL CONFIGURATION
 # --------------------------------------------------------------
 
-RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+RESEND_API_KEY = os.getenv(
+    "RESEND_API_KEY",
+    ""
+).strip()
 
 EMAIL_FROM = os.getenv(
     "EMAIL_FROM",
@@ -110,18 +147,25 @@ RESEND_API_URL = "https://api.resend.com/emails"
 
 
 ALLOWED_PDF_EXT = {"pdf"}
-ALLOWED_IMG_EXT = {"png", "jpg", "jpeg", "webp", "svg"}
+
+ALLOWED_IMG_EXT = {
+    "png",
+    "jpg",
+    "jpeg",
+    "webp",
+    "svg"
+}
 
 
-# In-memory OTP store
+# In-memory OTP store.
 #
 # {
-#   "email@example.com": {
-#       "otp": "123456",
-#       "expires": timestamp,
-#       "purpose": "signup",
-#       "data": {...}
-#   }
+#     "email@example.com": {
+#         "otp": "123456",
+#         "expires": timestamp,
+#         "purpose": "signup",
+#         "data": {...}
+#     }
 # }
 #
 # OTPs disappear if the server restarts.
@@ -130,10 +174,26 @@ PENDING_OTPS = {}
 
 
 # Make sure required directories exist.
-os.makedirs(DATA_DIR, exist_ok=True)
-os.makedirs(UPLOAD_PDF_DIR, exist_ok=True)
-os.makedirs(UPLOAD_BLOG_IMG_DIR, exist_ok=True)
-os.makedirs(UPLOAD_PROFILE_DIR, exist_ok=True)
+
+os.makedirs(
+    DATA_DIR,
+    exist_ok=True
+)
+
+os.makedirs(
+    UPLOAD_PDF_DIR,
+    exist_ok=True
+)
+
+os.makedirs(
+    UPLOAD_BLOG_IMG_DIR,
+    exist_ok=True
+)
+
+os.makedirs(
+    UPLOAD_PROFILE_DIR,
+    exist_ok=True
+)
 
 
 # ==============================================================
@@ -143,28 +203,50 @@ os.makedirs(UPLOAD_PROFILE_DIR, exist_ok=True)
 def read_json(filename):
     """Read a JSON file from the /data folder."""
 
-    path = os.path.join(DATA_DIR, filename)
+    path = os.path.join(
+        DATA_DIR,
+        filename
+    )
 
     if not os.path.exists(path):
         return []
 
     try:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(
+            path,
+            "r",
+            encoding="utf-8"
+        ) as f:
             content = f.read().strip()
 
         return json.loads(content) if content else []
 
-    except (json.JSONDecodeError, OSError) as e:
-        print(f"[JSON READ ERROR] {filename}: {e}")
+    except (
+        json.JSONDecodeError,
+        OSError
+    ) as e:
+
+        print(
+            f"[JSON READ ERROR] {filename}: {e}"
+        )
+
         return []
 
 
 def write_json(filename, data):
     """Save data to a JSON file inside /data."""
 
-    path = os.path.join(DATA_DIR, filename)
+    path = os.path.join(
+        DATA_DIR,
+        filename
+    )
 
-    with open(path, "w", encoding="utf-8") as f:
+    with open(
+        path,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
         json.dump(
             data,
             f,
@@ -176,16 +258,24 @@ def write_json(filename, data):
 def allowed_file(filename, allowed_set):
     return (
         "." in filename
-        and filename.rsplit(".", 1)[1].lower() in allowed_set
+        and filename.rsplit(
+            ".",
+            1
+        )[1].lower() in allowed_set
     )
 
 
 def generate_otp():
-    return "".join(random.choices(string.digits, k=6))
+    return "".join(
+        random.choices(
+            string.digits,
+            k=6
+        )
+    )
 
 
 def generate_id(prefix):
-    """Make a simple unique ID like pdf-a1b2c3."""
+    """Make a simple unique ID like pdf-123456789."""
 
     return f"{prefix}-{int(time.time() * 1000)}"
 
@@ -211,7 +301,11 @@ def login_required(view_func):
     def wrapped(*args, **kwargs):
 
         if not current_user():
-            flash("Please log in to continue.", "error")
+
+            flash(
+                "Please log in to continue.",
+                "error"
+            )
 
             return redirect(
                 url_for(
@@ -231,7 +325,9 @@ def admin_required(view_func):
     def wrapped(*args, **kwargs):
 
         if not session.get("is_admin"):
-            return redirect(url_for("admin_login"))
+            return redirect(
+                url_for("admin_login")
+            )
 
         return view_func(*args, **kwargs)
 
@@ -239,27 +335,30 @@ def admin_required(view_func):
 
 
 # ==============================================================
-# SECTION 3 - EMAIL (OTP) USING RESEND API
+# SECTION 3 - EMAIL OTP USING RESEND API
 # ==============================================================
 
-def send_otp_email(to_email, otp_code, purpose="verification"):
+def send_otp_email(
+    to_email,
+    otp_code,
+    purpose="verification"
+):
     """
     Send OTP using Resend API.
-
-    Environment variables:
-
-        RESEND_API_KEY
-        EMAIL_FROM
     """
 
-    subject = f"Your CCC {purpose} code"
+    subject = (
+        f"Your CCC {purpose} code"
+    )
 
     text_body = (
-        f"Your Chanakya Competition Cracker verification code is: "
+        "Your Chanakya Competition Cracker "
+        "verification code is: "
         f"{otp_code}\n\n"
-        f"This code expires in 10 minutes. "
-        f"If you did not request this, you can safely ignore this email.\n\n"
-        f"- Team CCC"
+        "This code expires in 10 minutes. "
+        "If you did not request this, you can safely "
+        "ignore this email.\n\n"
+        "- Team CCC"
     )
 
     html_body = f"""
@@ -270,14 +369,12 @@ def send_otp_email(to_email, otp_code, purpose="verification"):
         padding: 30px;
         background: #f7f7f7;
     ">
-
         <div style="
             background: white;
             padding: 30px;
             border-radius: 12px;
             text-align: center;
         ">
-
             <h2 style="margin-bottom: 10px;">
                 Chanakya Competition Cracker
             </h2>
@@ -296,20 +393,22 @@ def send_otp_email(to_email, otp_code, purpose="verification"):
             </div>
 
             <p>
-                This code expires in <strong>10 minutes</strong>.
+                This code expires in
+                <strong>10 minutes</strong>.
             </p>
 
-            <p style="color: #777; font-size: 13px;">
-                If you did not request this code, you can safely ignore
-                this email.
+            <p style="
+                color: #777;
+                font-size: 13px;
+            ">
+                If you did not request this code,
+                you can safely ignore this email.
             </p>
 
             <p>
                 — Team CCC
             </p>
-
         </div>
-
     </div>
     """
 
@@ -318,15 +417,28 @@ def send_otp_email(to_email, otp_code, purpose="verification"):
     # ----------------------------------------------------------
 
     if not RESEND_API_KEY:
-        print("\n[RESEND ERROR] RESEND_API_KEY is missing.")
-        print(f"[DEV OTP] {to_email} -> {otp_code}\n")
 
-        # Returning False lets the caller know email wasn't sent.
+        print(
+            "\n[RESEND ERROR] "
+            "RESEND_API_KEY is missing."
+        )
+
+        print(
+            f"[DEV OTP] {to_email} -> {otp_code}\n"
+        )
+
         return False
 
     if not EMAIL_FROM:
-        print("\n[RESEND ERROR] EMAIL_FROM is missing.")
-        print(f"[DEV OTP] {to_email} -> {otp_code}\n")
+
+        print(
+            "\n[RESEND ERROR] "
+            "EMAIL_FROM is missing."
+        )
+
+        print(
+            f"[DEV OTP] {to_email} -> {otp_code}\n"
+        )
 
         return False
 
@@ -357,6 +469,7 @@ def send_otp_email(to_email, otp_code, purpose="verification"):
         )
 
         # Success
+
         if 200 <= response.status_code < 300:
 
             try:
@@ -372,8 +485,10 @@ def send_otp_email(to_email, otp_code, purpose="verification"):
             return True
 
         # Resend returned an error
+
         print(
-            f"[RESEND ERROR] HTTP {response.status_code}: "
+            f"[RESEND ERROR] HTTP "
+            f"{response.status_code}: "
             f"{response.text}"
         )
 
@@ -382,7 +497,8 @@ def send_otp_email(to_email, otp_code, purpose="verification"):
     except requests.exceptions.Timeout:
 
         print(
-            "[RESEND ERROR] Request timed out while contacting Resend."
+            "[RESEND ERROR] Request timed out "
+            "while contacting Resend."
         )
 
         return False
@@ -424,13 +540,19 @@ def home():
 
     blogs = sorted(
         read_json("blogs.json"),
-        key=lambda b: b.get("publish_date", ""),
+        key=lambda b: b.get(
+            "publish_date",
+            ""
+        ),
         reverse=True
     )[:3]
 
     pdfs = sorted(
         read_json("pdfs.json"),
-        key=lambda p: p.get("upload_date", ""),
+        key=lambda p: p.get(
+            "upload_date",
+            ""
+        ),
         reverse=True
     )[:3]
 
@@ -446,9 +568,12 @@ def mcqs_page():
 
     sets = read_json("mcqs.json")
 
-    category = request.args.get("category")
+    category = request.args.get(
+        "category"
+    )
 
     if category:
+
         sets = [
             s for s in sets
             if s.get("category") == category
@@ -456,7 +581,10 @@ def mcqs_page():
 
     categories = sorted(
         set(
-            s.get("category", "General")
+            s.get(
+                "category",
+                "General"
+            )
             for s in read_json("mcqs.json")
         )
     )
@@ -475,7 +603,10 @@ def mcq_attempt(set_id):
     sets = read_json("mcqs.json")
 
     mcq_set = next(
-        (s for s in sets if s.get("id") == set_id),
+        (
+            s for s in sets
+            if s.get("id") == set_id
+        ),
         None
     )
 
@@ -486,10 +617,13 @@ def mcq_attempt(set_id):
 
         user = current_user()
 
-        purchases = read_json("purchases.json")
+        purchases = read_json(
+            "purchases.json"
+        )
 
         owns_it = bool(
-            user and any(
+            user
+            and any(
                 p.get("user_email") == user.get("email")
                 and p.get("item_id") == set_id
                 for p in purchases
@@ -502,7 +636,9 @@ def mcq_attempt(set_id):
                 "locked.html",
                 item=mcq_set,
                 item_kind="MCQ set",
-                back_url=url_for("mcqs_page")
+                back_url=url_for(
+                    "mcqs_page"
+                )
             )
 
     return render_template(
@@ -516,13 +652,19 @@ def blog_page():
 
     blogs = sorted(
         read_json("blogs.json"),
-        key=lambda b: b.get("publish_date", ""),
+        key=lambda b: b.get(
+            "publish_date",
+            ""
+        ),
         reverse=True
     )
 
-    category = request.args.get("category")
+    category = request.args.get(
+        "category"
+    )
 
     if category:
+
         blogs = [
             b for b in blogs
             if b.get("category") == category
@@ -530,7 +672,10 @@ def blog_page():
 
     categories = sorted(
         set(
-            b.get("category", "General")
+            b.get(
+                "category",
+                "General"
+            )
             for b in read_json("blogs.json")
         )
     )
@@ -546,10 +691,15 @@ def blog_page():
 @app.route("/blog/<blog_id>")
 def blog_detail(blog_id):
 
-    blogs = read_json("blogs.json")
+    blogs = read_json(
+        "blogs.json"
+    )
 
     post = next(
-        (b for b in blogs if b.get("id") == blog_id),
+        (
+            b for b in blogs
+            if b.get("id") == blog_id
+        ),
         None
     )
 
@@ -560,10 +710,13 @@ def blog_detail(blog_id):
 
         user = current_user()
 
-        purchases = read_json("purchases.json")
+        purchases = read_json(
+            "purchases.json"
+        )
 
         owns_it = bool(
-            user and any(
+            user
+            and any(
                 p.get("user_email") == user.get("email")
                 and p.get("item_id") == blog_id
                 for p in purchases
@@ -576,16 +729,23 @@ def blog_detail(blog_id):
                 "locked.html",
                 item=post,
                 item_kind="blog article",
-                back_url=url_for("blog_page")
+                back_url=url_for(
+                    "blog_page"
+                )
             )
 
     for blog in blogs:
 
         if blog.get("id") == blog_id:
 
-            blog["views"] = blog.get("views", 0) + 1
+            blog["views"] = (
+                blog.get("views", 0) + 1
+            )
 
-    write_json("blogs.json", blogs)
+    write_json(
+        "blogs.json",
+        blogs
+    )
 
     return render_template(
         "blog_detail.html",
@@ -598,20 +758,30 @@ def pdfs_page():
 
     pdfs = sorted(
         read_json("pdfs.json"),
-        key=lambda p: p.get("upload_date", ""),
+        key=lambda p: p.get(
+            "upload_date",
+            ""
+        ),
         reverse=True
     )
 
-    category = request.args.get("category")
-    ptype = request.args.get("type")
+    category = request.args.get(
+        "category"
+    )
+
+    ptype = request.args.get(
+        "type"
+    )
 
     if category:
+
         pdfs = [
             p for p in pdfs
             if p.get("category") == category
         ]
 
     if ptype:
+
         pdfs = [
             p for p in pdfs
             if p.get("type") == ptype
@@ -619,7 +789,10 @@ def pdfs_page():
 
     categories = sorted(
         set(
-            p.get("category", "General")
+            p.get(
+                "category",
+                "General"
+            )
             for p in read_json("pdfs.json")
         )
     )
@@ -636,10 +809,15 @@ def pdfs_page():
 @app.route("/pdfs/<pdf_id>")
 def pdf_detail(pdf_id):
 
-    pdfs = read_json("pdfs.json")
+    pdfs = read_json(
+        "pdfs.json"
+    )
 
     pdf = next(
-        (p for p in pdfs if p.get("id") == pdf_id),
+        (
+            p for p in pdfs
+            if p.get("id") == pdf_id
+        ),
         None
     )
 
@@ -652,10 +830,13 @@ def pdf_detail(pdf_id):
 
         user = current_user()
 
-        purchases = read_json("purchases.json")
+        purchases = read_json(
+            "purchases.json"
+        )
 
         owns_it = bool(
-            user and any(
+            user
+            and any(
                 p.get("user_email") == user.get("email")
                 and p.get("item_id") == pdf_id
                 for p in purchases
@@ -677,7 +858,10 @@ def questions_page():
 
     questions = sorted(
         read_json("questions.json"),
-        key=lambda q: q.get("date", ""),
+        key=lambda q: q.get(
+            "date",
+            ""
+        ),
         reverse=True
     )
 
@@ -690,10 +874,15 @@ def questions_page():
 @app.route("/questions/<question_id>")
 def question_detail(question_id):
 
-    questions = read_json("questions.json")
+    questions = read_json(
+        "questions.json"
+    )
 
     q = next(
-        (x for x in questions if x.get("id") == question_id),
+        (
+            x for x in questions
+            if x.get("id") == question_id
+        ),
         None
     )
 
@@ -706,35 +895,59 @@ def question_detail(question_id):
     )
 
 
-@app.route("/questions/ask", methods=["POST"])
+@app.route(
+    "/questions/ask",
+    methods=["POST"]
+)
 @login_required
 def ask_question():
 
-    questions = read_json("questions.json")
+    questions = read_json(
+        "questions.json"
+    )
 
     user = current_user()
 
     new_q = {
         "id": generate_id("q"),
-        "title": request.form.get("title", "").strip(),
-        "body": request.form.get("body", "").strip(),
+
+        "title": request.form.get(
+            "title",
+            ""
+        ).strip(),
+
+        "body": request.form.get(
+            "body",
+            ""
+        ).strip(),
+
         "category": request.form.get(
             "category",
             "General"
         ).strip(),
+
         "asked_by": user["name"],
-        "date": datetime.now().strftime("%Y-%m-%d"),
+
+        "date": datetime.now().strftime(
+            "%Y-%m-%d"
+        ),
+
         "answers": []
     }
 
-    if not new_q["title"] or not new_q["body"]:
+    if (
+        not new_q["title"]
+        or not new_q["body"]
+    ):
 
         flash(
             "Please fill in both a title and details for your question.",
             "error"
         )
 
-        return redirect(url_for("questions_page"))
+        return redirect(
+            url_for("questions_page")
+        )
 
     questions.append(new_q)
 
@@ -763,25 +976,38 @@ def ask_question():
 @login_required
 def answer_question(question_id):
 
-    questions = read_json("questions.json")
+    questions = read_json(
+        "questions.json"
+    )
 
     user = current_user()
 
     q = next(
-        (x for x in questions if x.get("id") == question_id),
+        (
+            x for x in questions
+            if x.get("id") == question_id
+        ),
         None
     )
 
     if not q:
         abort(404)
 
-    body = request.form.get("body", "").strip()
+    body = request.form.get(
+        "body",
+        ""
+    ).strip()
 
     if body:
 
-        q.setdefault("answers", []).append({
+        q.setdefault(
+            "answers",
+            []
+        ).append({
             "answered_by": user["name"],
-            "date": datetime.now().strftime("%Y-%m-%d"),
+            "date": datetime.now().strftime(
+                "%Y-%m-%d"
+            ),
             "body": body
         })
 
@@ -805,19 +1031,26 @@ def answer_question(question_id):
 
 @app.route("/help")
 def help_page():
-    return render_template("help.html")
+    return render_template(
+        "help.html"
+    )
 
 
 # ==============================================================
 # SECTION 5 - AUTH
 # ==============================================================
 
-@app.route("/signup", methods=["GET", "POST"])
+@app.route(
+    "/signup",
+    methods=["GET", "POST"]
+)
 def signup_page():
 
     if request.method == "GET":
 
-        return render_template("signup.html")
+        return render_template(
+            "signup.html"
+        )
 
     name = request.form.get(
         "name",
@@ -845,7 +1078,9 @@ def signup_page():
             url_for("signup_page")
         )
 
-    users = read_json("users.json")
+    users = read_json(
+        "users.json"
+    )
 
     if any(
         u.get("email") == email
@@ -906,12 +1141,33 @@ def signup_page():
     )
 
 
-@app.route("/login", methods=["GET", "POST"])
+# --------------------------------------------------------------
+# LOGIN
+# --------------------------------------------------------------
+#
+# IMPORTANT:
+# Login does NOT use OTP.
+#
+# User enters:
+#   Email + Password
+#
+# If correct:
+#   Directly logged in.
+#
+# Signup is the only place where email OTP is required.
+# --------------------------------------------------------------
+
+@app.route(
+    "/login",
+    methods=["GET", "POST"]
+)
 def login_page():
 
     if request.method == "GET":
 
-        return render_template("login.html")
+        return render_template(
+            "login.html"
+        )
 
     email = request.form.get(
         "email",
@@ -923,7 +1179,20 @@ def login_page():
         ""
     )
 
-    users = read_json("users.json")
+    if not email or not password:
+
+        flash(
+            "Please enter your email and password.",
+            "error"
+        )
+
+        return redirect(
+            url_for("login_page")
+        )
+
+    users = read_json(
+        "users.json"
+    )
 
     user = next(
         (
@@ -933,10 +1202,14 @@ def login_page():
         None
     )
 
+    # Check email + password directly.
     if (
         not user
         or not check_password_hash(
-            user.get("password_hash", ""),
+            user.get(
+                "password_hash",
+                ""
+            ),
             password
         )
     ):
@@ -950,45 +1223,34 @@ def login_page():
             url_for("login_page")
         )
 
-    otp = generate_otp()
+    # ----------------------------------------------------------
+    # DIRECT LOGIN
+    # NO OTP
+    # ----------------------------------------------------------
 
-    PENDING_OTPS[email] = {
-        "otp": otp,
-        "expires": time.time() + 600,
-        "purpose": "login",
-        "data": {}
-    }
+    session["user_email"] = email
 
-    email_sent = send_otp_email(
-        email,
-        otp,
-        purpose="login verification"
+    # Remove any old pending OTP session,
+    # just in case one exists.
+    session.pop(
+        "otp_pending_email",
+        None
     )
 
-    session["otp_pending_email"] = email
-
-    if email_sent:
-
-        flash(
-            "We've sent a 6-digit code to your email "
-            "to confirm it's you.",
-            "info"
-        )
-
-    else:
-
-        flash(
-            "We couldn't send the verification email right now. "
-            "Please check the email configuration.",
-            "error"
-        )
+    flash(
+        "Welcome back to Chanakya Competition Cracker.",
+        "success"
+    )
 
     return redirect(
-        url_for("verify_otp_page")
+        url_for("home")
     )
 
 
-@app.route("/verify-otp", methods=["GET", "POST"])
+@app.route(
+    "/verify-otp",
+    methods=["GET", "POST"]
+)
 def verify_otp_page():
 
     email = session.get(
@@ -1013,7 +1275,9 @@ def verify_otp_page():
         ""
     ).strip()
 
-    record = PENDING_OTPS.get(email)
+    record = PENDING_OTPS.get(
+        email
+    )
 
     if (
         not record
@@ -1023,6 +1287,11 @@ def verify_otp_page():
         flash(
             "This code has expired. Please try again.",
             "error"
+        )
+
+        session.pop(
+            "otp_pending_email",
+            None
         )
 
         return redirect(
@@ -1042,34 +1311,64 @@ def verify_otp_page():
 
     # ----------------------------------------------------------
     # OTP CORRECT
+    #
+    # OTP is used ONLY for signup.
     # ----------------------------------------------------------
 
     if record["purpose"] == "signup":
 
-        users = read_json("users.json")
-
-        new_user = {
-            "email": record["data"]["email"],
-            "name": record["data"]["name"],
-            "password_hash": record["data"]["password_hash"],
-            "bio": "",
-            "profile_pic": "/static/img/placeholders/default-avatar.svg",
-            "joined": datetime.now().strftime("%Y-%m-%d"),
-        }
-
-        users.append(new_user)
-
-        write_json(
-            "users.json",
-            users
+        users = read_json(
+            "users.json"
         )
 
-    del PENDING_OTPS[email]
+        # Prevent duplicate account creation
+        # if the request somehow gets submitted twice.
+        already_exists = any(
+            u.get("email") == email
+            for u in users
+        )
+
+        if not already_exists:
+
+            new_user = {
+                "email": record["data"]["email"],
+
+                "name": record["data"]["name"],
+
+                "password_hash": record["data"]["password_hash"],
+
+                "bio": "",
+
+                "profile_pic":
+                    "/static/img/placeholders/default-avatar.svg",
+
+                "joined": datetime.now().strftime(
+                    "%Y-%m-%d"
+                ),
+            }
+
+            users.append(
+                new_user
+            )
+
+            write_json(
+                "users.json",
+                users
+            )
+
+    # Remove OTP after successful verification.
+
+    PENDING_OTPS.pop(
+        email,
+        None
+    )
 
     session.pop(
         "otp_pending_email",
         None
     )
+
+    # Automatically log in after successful signup verification.
 
     session["user_email"] = email
 
@@ -1083,7 +1382,10 @@ def verify_otp_page():
     )
 
 
-@app.route("/resend-otp", methods=["POST"])
+@app.route(
+    "/resend-otp",
+    methods=["POST"]
+)
 def resend_otp():
 
     email = session.get(
@@ -1118,7 +1420,8 @@ def resend_otp():
 
         return jsonify({
             "ok": False,
-            "message": "Could not send the email. Please try again."
+            "message":
+                "Could not send the email. Please try again."
         }), 500
 
     return jsonify({
@@ -1156,18 +1459,30 @@ def profile_page():
     user = current_user()
 
     purchases = [
-        p for p in read_json("purchases.json")
-        if p.get("user_email") == user.get("email")
+        p for p in read_json(
+            "purchases.json"
+        )
+        if p.get("user_email")
+        == user.get("email")
     ]
 
-    pdfs = read_json("pdfs.json")
-    blogs = read_json("blogs.json")
-    mcqs = read_json("mcqs.json")
+    pdfs = read_json(
+        "pdfs.json"
+    )
+
+    blogs = read_json(
+        "blogs.json"
+    )
+
+    mcqs = read_json(
+        "mcqs.json"
+    )
 
     purchased_pdfs = [
         p for p in pdfs
         if any(
-            pu.get("item_id") == p.get("id")
+            pu.get("item_id")
+            == p.get("id")
             for pu in purchases
         )
     ]
@@ -1175,7 +1490,8 @@ def profile_page():
     purchased_blogs = [
         b for b in blogs
         if any(
-            pu.get("item_id") == b.get("id")
+            pu.get("item_id")
+            == b.get("id")
             for pu in purchases
         )
     ]
@@ -1183,7 +1499,8 @@ def profile_page():
     purchased_mcqs = [
         m for m in mcqs
         if any(
-            pu.get("item_id") == m.get("id")
+            pu.get("item_id")
+            == m.get("id")
             for pu in purchases
         )
     ]
@@ -1197,13 +1514,18 @@ def profile_page():
     )
 
 
-@app.route("/profile/update", methods=["POST"])
+@app.route(
+    "/profile/update",
+    methods=["POST"]
+)
 @login_required
 def update_profile():
 
     user = current_user()
 
-    users = read_json("users.json")
+    users = read_json(
+        "users.json"
+    )
 
     new_name = request.form.get(
         "name",
@@ -1273,7 +1595,10 @@ def update_profile():
 # SECTION 7 - ADMIN PANEL
 # ==============================================================
 
-@app.route("/admin/login", methods=["GET", "POST"])
+@app.route(
+    "/admin/login",
+    methods=["GET", "POST"]
+)
 def admin_login():
 
     if request.method == "GET":
@@ -1331,12 +1656,29 @@ def admin_logout():
 def admin_dashboard():
 
     stats = {
-        "users": len(read_json("users.json")),
-        "pdfs": len(read_json("pdfs.json")),
-        "blogs": len(read_json("blogs.json")),
-        "mcq_sets": len(read_json("mcqs.json")),
-        "questions": len(read_json("questions.json")),
-        "purchases": len(read_json("purchases.json")),
+        "users": len(
+            read_json("users.json")
+        ),
+
+        "pdfs": len(
+            read_json("pdfs.json")
+        ),
+
+        "blogs": len(
+            read_json("blogs.json")
+        ),
+
+        "mcq_sets": len(
+            read_json("mcqs.json")
+        ),
+
+        "questions": len(
+            read_json("questions.json")
+        ),
+
+        "purchases": len(
+            read_json("purchases.json")
+        ),
     }
 
     return render_template(
@@ -1345,13 +1687,18 @@ def admin_dashboard():
     )
 
 
-@app.route("/admin/pdfs", methods=["GET", "POST"])
+@app.route(
+    "/admin/pdfs",
+    methods=["GET", "POST"]
+)
 @admin_required
 def admin_pdfs():
 
     if request.method == "POST":
 
-        pdfs = read_json("pdfs.json")
+        pdfs = read_json(
+            "pdfs.json"
+        )
 
         pdf_file = request.files.get(
             "pdf_file"
@@ -1378,7 +1725,9 @@ def admin_pdfs():
                 url_for("admin_pdfs")
             )
 
-        new_id = generate_id("pdf")
+        new_id = generate_id(
+            "pdf"
+        )
 
         pdf_filename = secure_filename(
             f"{new_id}_{pdf_file.filename}"
@@ -1416,12 +1765,28 @@ def admin_pdfs():
             )
 
             cover_path = (
-                f"/static/uploads/blog_images/{cover_filename}"
+                f"/static/uploads/blog_images/"
+                f"{cover_filename}"
             )
 
         is_paid = (
-            request.form.get("is_paid") == "on"
+            request.form.get(
+                "is_paid"
+            ) == "on"
         )
+
+        try:
+
+            price = int(
+                request.form.get(
+                    "price",
+                    0
+                ) or 0
+            )
+
+        except ValueError:
+
+            price = 0
 
         pdfs.append({
 
@@ -1449,16 +1814,7 @@ def admin_pdfs():
 
             "is_paid": is_paid,
 
-            "price": (
-                int(
-                    request.form.get(
-                        "price",
-                        0
-                    ) or 0
-                )
-                if is_paid
-                else 0
-            ),
+            "price": price if is_paid else 0,
 
             "cover_image": cover_path,
 
@@ -1487,7 +1843,10 @@ def admin_pdfs():
 
     pdfs = sorted(
         read_json("pdfs.json"),
-        key=lambda p: p.get("upload_date", ""),
+        key=lambda p: p.get(
+            "upload_date",
+            ""
+        ),
         reverse=True
     )
 
@@ -1504,7 +1863,9 @@ def admin_pdfs():
 @admin_required
 def admin_delete_pdf(pdf_id):
 
-    pdfs = read_json("pdfs.json")
+    pdfs = read_json(
+        "pdfs.json"
+    )
 
     target = next(
         (
@@ -1518,11 +1879,19 @@ def admin_delete_pdf(pdf_id):
 
         file_path = os.path.join(
             UPLOAD_PDF_DIR,
-            target.get("file_name", "")
+            target.get(
+                "file_name",
+                ""
+            )
         )
 
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        if os.path.exists(
+            file_path
+        ):
+
+            os.remove(
+                file_path
+            )
 
         pdfs = [
             p for p in pdfs
@@ -1553,9 +1922,13 @@ def admin_blogs():
 
     if request.method == "POST":
 
-        blogs = read_json("blogs.json")
+        blogs = read_json(
+            "blogs.json"
+        )
 
-        new_id = generate_id("blog")
+        new_id = generate_id(
+            "blog"
+        )
 
         cover_path = (
             "/static/img/placeholders/blog-cover-1.svg"
@@ -1586,12 +1959,28 @@ def admin_blogs():
             )
 
             cover_path = (
-                f"/static/uploads/blog_images/{cover_filename}"
+                f"/static/uploads/blog_images/"
+                f"{cover_filename}"
             )
 
         is_paid = (
-            request.form.get("is_paid") == "on"
+            request.form.get(
+                "is_paid"
+            ) == "on"
         )
+
+        try:
+
+            price = int(
+                request.form.get(
+                    "price",
+                    0
+                ) or 0
+            )
+
+        except ValueError:
+
+            price = 0
 
         blogs.append({
 
@@ -1619,16 +2008,7 @@ def admin_blogs():
 
             "is_paid": is_paid,
 
-            "price": (
-                int(
-                    request.form.get(
-                        "price",
-                        0
-                    ) or 0
-                )
-                if is_paid
-                else 0
-            ),
+            "price": price if is_paid else 0,
 
             "cover_image": cover_path,
 
@@ -1657,7 +2037,10 @@ def admin_blogs():
 
     blogs = sorted(
         read_json("blogs.json"),
-        key=lambda b: b.get("publish_date", ""),
+        key=lambda b: b.get(
+            "publish_date",
+            ""
+        ),
         reverse=True
     )
 
@@ -1674,7 +2057,9 @@ def admin_blogs():
 @admin_required
 def admin_delete_blog(blog_id):
 
-    blogs = read_json("blogs.json")
+    blogs = read_json(
+        "blogs.json"
+    )
 
     blogs = [
         b for b in blogs
@@ -1705,7 +2090,9 @@ def admin_mcqs():
 
     if request.method == "POST":
 
-        mcq_sets = read_json("mcqs.json")
+        mcq_sets = read_json(
+            "mcqs.json"
+        )
 
         questions = []
 
@@ -1725,16 +2112,22 @@ def admin_mcqs():
             "question_explanation[]"
         )
 
-        for i in range(len(q_texts)):
+        for i in range(
+            len(q_texts)
+        ):
 
             if not q_texts[i].strip():
                 continue
 
-            options = [
-                o.strip()
-                for o in q_options[i].split(",")
-                if o.strip()
-            ]
+            options = []
+
+            if i < len(q_options):
+
+                options = [
+                    o.strip()
+                    for o in q_options[i].split(",")
+                    if o.strip()
+                ]
 
             answer = 0
 
@@ -1742,11 +2135,17 @@ def admin_mcqs():
                 i < len(q_answers)
                 and q_answers[i].isdigit()
             ):
-                answer = int(q_answers[i])
+
+                answer = int(
+                    q_answers[i]
+                )
 
             explanation = ""
 
-            if i < len(q_explanations):
+            if i < len(
+                q_explanations
+            ):
+
                 explanation = (
                     q_explanations[i].strip()
                 )
@@ -1763,12 +2162,29 @@ def admin_mcqs():
             })
 
         is_paid = (
-            request.form.get("is_paid") == "on"
+            request.form.get(
+                "is_paid"
+            ) == "on"
         )
+
+        try:
+
+            price = int(
+                request.form.get(
+                    "price",
+                    0
+                ) or 0
+            )
+
+        except ValueError:
+
+            price = 0
 
         mcq_sets.append({
 
-            "id": generate_id("mcq-set"),
+            "id": generate_id(
+                "mcq-set"
+            ),
 
             "title": request.form.get(
                 "title",
@@ -1782,16 +2198,7 @@ def admin_mcqs():
 
             "is_paid": is_paid,
 
-            "price": (
-                int(
-                    request.form.get(
-                        "price",
-                        0
-                    ) or 0
-                )
-                if is_paid
-                else 0
-            ),
+            "price": price if is_paid else 0,
 
             "questions": questions
         })
@@ -1810,7 +2217,9 @@ def admin_mcqs():
             url_for("admin_mcqs")
         )
 
-    mcq_sets = read_json("mcqs.json")
+    mcq_sets = read_json(
+        "mcqs.json"
+    )
 
     return render_template(
         "admin/mcqs.html",
@@ -1825,7 +2234,9 @@ def admin_mcqs():
 @admin_required
 def admin_delete_mcq(set_id):
 
-    mcq_sets = read_json("mcqs.json")
+    mcq_sets = read_json(
+        "mcqs.json"
+    )
 
     mcq_sets = [
         s for s in mcq_sets
@@ -1851,7 +2262,9 @@ def admin_delete_mcq(set_id):
 @admin_required
 def admin_users():
 
-    users = read_json("users.json")
+    users = read_json(
+        "users.json"
+    )
 
     return render_template(
         "admin/users.html",
@@ -1877,11 +2290,15 @@ def admin_questions():
 # SECTION 8 - PROTECTED PDF DELIVERY
 # ==============================================================
 
-@app.route("/secure-pdf/<pdf_id>")
+@app.route(
+    "/secure-pdf/<pdf_id>"
+)
 @login_required
 def secure_pdf_view(pdf_id):
 
-    pdfs = read_json("pdfs.json")
+    pdfs = read_json(
+        "pdfs.json"
+    )
 
     pdf = next(
         (
@@ -1903,8 +2320,10 @@ def secure_pdf_view(pdf_id):
         )
 
         owns_it = any(
-            p.get("user_email") == user.get("email")
-            and p.get("item_id") == pdf_id
+            p.get("user_email")
+            == user.get("email")
+            and p.get("item_id")
+            == pdf_id
             for p in purchases
         )
 
@@ -1916,7 +2335,10 @@ def secure_pdf_view(pdf_id):
         if p.get("id") == pdf_id:
 
             p["downloads"] = (
-                p.get("downloads", 0) + 1
+                p.get(
+                    "downloads",
+                    0
+                ) + 1
             )
 
     write_json(
@@ -1939,7 +2361,10 @@ def secure_pdf_view(pdf_id):
     methods=["POST"]
 )
 @login_required
-def buy_item(item_type, item_id):
+def buy_item(
+    item_type,
+    item_id
+):
 
     if not PAYMENTS_ENABLED:
 
@@ -1955,13 +2380,8 @@ def buy_item(item_type, item_id):
         )
 
     # ----------------------------------------------------------
-    # FUTURE CASHFREE INTEGRATION
+    # FUTURE PAYMENT INTEGRATION
     # ----------------------------------------------------------
-    #
-    # Real payment gateway integration should create an order,
-    # redirect the user to the gateway, and only add a purchase
-    # after successful payment verification/webhook.
-    #
 
     user = current_user()
 
@@ -2025,25 +2445,39 @@ def forbidden(e):
 
 if __name__ == "__main__":
 
-    print("\n" + "=" * 60)
+    print(
+        "\n" + "=" * 60
+    )
 
     print(
         "  Chanakya Competition Cracker (CCC) is starting..."
     )
 
     print(
-        f"  Open your browser to: http://localhost:{PORT}"
+        f"  Open your browser to: "
+        f"http://localhost:{PORT}"
     )
 
     print(
-        f"  Resend configured: {'YES' if RESEND_API_KEY else 'NO'}"
+        f"  Resend configured: "
+        f"{'YES' if RESEND_API_KEY else 'NO'}"
     )
 
     print(
         f"  Email From: {EMAIL_FROM}"
     )
 
-    print("=" * 60 + "\n")
+    print(
+        "  Signup OTP: ENABLED"
+    )
+
+    print(
+        "  Login OTP: DISABLED"
+    )
+
+    print(
+        "=" * 60 + "\n"
+    )
 
     app.run(
         debug=DEBUG_MODE,
