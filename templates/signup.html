@@ -1,30 +1,89 @@
 {% extends "base.html" %}
 {% block title %}Sign Up — {{ site_name }}{% endblock %}
 {% block content %}
+
 <div class="auth-wrap">
   <div class="auth-panel">
     <img src="{{ url_for('static', filename='img/logo.jpg') }}" alt="CCC Crest" class="crest-mini">
-    <h2>Create Your Account</h2>
-    <p class="sub">Join Chanakya Competition Cracker and start preparing today.</p>
 
-    <form method="POST" action="{{ url_for('signup_page') }}">
-      <div class="form-group">
-        <label>Full Name</label>
-        <input type="text" name="name" placeholder="Your full name" required>
-      </div>
-      <div class="form-group">
-        <label>Email Address</label>
-        <input type="email" name="email" placeholder="you@example.com" required>
-      </div>
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Create a password" minlength="6" required>
-        <div class="form-hint">Use at least 6 characters.</div>
-      </div>
-      <button type="submit" class="btn btn-gold btn-block">Create Account</button>
-    </form>
+```
+<h2>Create Your Account</h2>
 
-    <div class="auth-switch">Already have an account? <a href="{{ url_for('login_page') }}">Log In</a></div>
+<p class="sub">
+  Join Chanakya Competition Cracker and start preparing today.
+</p>
+
+<form method="POST" action="{{ url_for('signup_page') }}">
+
+  <div class="form-group">
+    <label>Full Name</label>
+    <input
+      type="text"
+      name="name"
+      placeholder="Your full name"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>Email Address</label>
+    <input
+      type="email"
+      name="email"
+      placeholder="you@example.com"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>Password</label>
+    <input
+      type="password"
+      name="password"
+      placeholder="Create a password"
+      minlength="6"
+      required
+    >
+    <div class="form-hint">
+      Use at least 6 characters.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Country</label>
+    <input
+      type="text"
+      name="country"
+      placeholder="Your country"
+      required
+    >
+  </div>
+
+  <div class="form-group">
+    <label>Phone Number</label>
+    <input
+      type="tel"
+      name="phone"
+      placeholder="Your phone number"
+      required
+    >
+  </div>
+
+  <button
+    type="submit"
+    class="btn btn-gold btn-block"
+  >
+    Create Account
+  </button>
+
+</form>
+
+<div class="auth-switch">
+  Already have an account?
+  <a href="{{ url_for('login_page') }}">Log In</a>
+</div>
+```
+
   </div>
 </div>
 {% endblock %}
